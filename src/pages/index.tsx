@@ -1,8 +1,7 @@
 import { cookie, setCookie } from "@lazarv/react-server";
-
-import { increment } from "../actions";
-import { getState } from "../actions";
-import Counter from "../Counter";
+import Counter from "~/components/Counter";
+import { increment, register } from "~/lib/actions";
+import { getState } from "~/lib/actions";
 
 export default function Index() {
   const cookies = cookie();
@@ -10,6 +9,14 @@ export default function Index() {
   if (!id) {
     id = crypto.randomUUID();
     setCookie("session", id);
+    register(id);
   }
-  return <Counter id={id} count={getState().count} increment={increment} />;
+  const state = getState();
+  return [...state.entries()].map(([_id, state], i) =>
+    _id === id ? (
+      <Counter key={_id} count={state.count} increment={increment} id={_id} />
+    ) : (
+      <p key={_id}>{state.count}</p>
+    )
+  );
 }

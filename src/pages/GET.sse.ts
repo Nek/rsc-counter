@@ -1,11 +1,13 @@
-import { registerClient, unregisterClient } from "../lib/sse";
 import { cookie } from "@lazarv/react-server";
+import { registerClient, unregisterClient } from "~/lib/sse";
 
-export default async function GetSSE({ request, response }) {
-  const encoder = new TextEncoder();
+export default async function GetSSE({ request }: { request: Request }) {
   const cookies = cookie();
-  console.log("cks", cookies);
-  const id = cookies.session || crypto.randomUUID();
+  const id = cookies.session as string;
+
+  if (!id) {
+    return new Response("Not found", { status: 404 });
+  }
 
   const stream = new ReadableStream({
     start(controller) {

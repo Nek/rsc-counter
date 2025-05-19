@@ -5,17 +5,20 @@ import { useEffect, useState } from "react";
 export default function Counter({
   count,
   increment,
+  id,
 }: {
   count: number;
-  increment: () => void;
+  increment: (id: string) => void;
+  id: string;
 }) {
   const [data, setData] = useState({ count });
 
   useEffect(() => {
     const eventSource = new EventSource("/sse");
     eventSource.onmessage = (event) => {
-      console.log("event", event);
-      setData(JSON.parse(event.data));
+      const data = JSON.parse(event.data);
+      console.log("event", data);
+      setData(data);
     };
     return () => eventSource.close();
   }, []);
@@ -23,7 +26,7 @@ export default function Counter({
   return (
     <div>
       <p>Count: {data.count}</p>
-      <button onClick={() => increment()}>Increment</button>
+      <button onClick={() => setData(increment(id))}>Increment</button>
     </div>
   );
 }

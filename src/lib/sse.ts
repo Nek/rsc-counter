@@ -11,16 +11,19 @@ export function unregisterClient(id: string) {
   clients.delete(id);
 }
 
-export function pushToClients(data: any) {
-  const payload = `data: ${JSON.stringify(data)}\n\n`;
-  const encoded = new TextEncoder().encode(payload);
-
-  for (const client of clients.values()) {
+export function notifyClients(state: Map<string, any>) {
+  for (const [id, clientState] of state.entries()) {
+    const client = clients.get(id);
+    if (!client) {
+      continue;
+    }
+    const payload = `data: ${JSON.stringify(clientState)}\n\n`;
+    const encoded = new TextEncoder().encode(payload);
     try {
       client.enqueue(encoded);
     } catch (err) {
       console.error(err);
-      clients.delete(client); // remove broken clients
+      clients.delete(id); // remove broken clients
     }
   }
 }
