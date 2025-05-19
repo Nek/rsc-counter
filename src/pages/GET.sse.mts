@@ -1,14 +1,18 @@
 import { registerClient, unregisterClient } from "../lib/sse";
+import { cookie } from "@lazarv/react-server";
 
 export default async function GetSSE({ request, response }) {
   const encoder = new TextEncoder();
+  const cookies = cookie();
+  console.log("cks", cookies);
+  const id = cookies.session || crypto.randomUUID();
 
   const stream = new ReadableStream({
     start(controller) {
-      registerClient(controller);
+      registerClient(id, controller);
 
       request.signal.addEventListener("abort", () => {
-        unregisterClient(controller);
+        unregisterClient(id);
         controller.close();
       });
     },
