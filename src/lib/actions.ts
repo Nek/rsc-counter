@@ -12,15 +12,14 @@ export type AppState = Map<SessionId, ClientState>;
 
 const state: AppState = new Map();
 
-export function register(id: SessionId): ClientState {
+export function register(id: SessionId): void {
   if (!state.has(id)) {
     state.set(id, { count: 0 });
   }
-  // notifyClients(state);
-  return state.get(id)!;
+  notifyClients(state);
 }
 
-export function increment(id: SessionId): ClientState {
+export function increment(id: SessionId): void {
   if (!state.has(id)) {
     throw new Error("No such session");
   }
@@ -31,7 +30,6 @@ export function increment(id: SessionId): ClientState {
   const newState = { count: count + 1 };
   state.set(id, newState);
   notifyClients(state);
-  return newState;
 }
 
 export function getState() {

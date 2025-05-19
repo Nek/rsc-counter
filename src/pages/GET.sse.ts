@@ -1,20 +1,22 @@
-import { cookie } from "@lazarv/react-server";
+import { cookie, useSearchParams } from "@lazarv/react-server";
 import { registerClient, unregisterClient } from "~/lib/sse";
 
 export default async function GetSSE({ request }: { request: Request }) {
   const cookies = cookie();
-  const id = cookies.session as string;
+  const sessionId = cookies.session as string;
 
-  if (!id) {
+  const clientId = useSearchParams().clientId;
+
+  if (!sessionId || !clientId) {
     return new Response("Not found", { status: 404 });
   }
 
   const stream = new ReadableStream({
     start(controller) {
-      registerClient(id, controller);
+      registerClient(sessionId, clientId, controller);
 
       request.signal.addEventListener("abort", () => {
-        unregisterClient(id);
+        unregisterClient(sessionId, clientId);
         controller.close();
       });
     },
