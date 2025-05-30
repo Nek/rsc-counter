@@ -25,7 +25,7 @@ The build output will be in the `.react-server` directory.
 To run the production server, run:
 
 ```sh
-bun --bun start start
+bun --bun run start
 ```
 
 ## Learn More
