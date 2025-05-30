@@ -9,7 +9,6 @@ const redis = new Redis(); // default: localhost:6379
 const VOTES = ["A", "B", "C", "D"] as const;
 export type VoteOptions = (typeof VOTES)[number];
 export type State = Record<VoteOptions, number>;
-const ENTRIES: [VoteOptions, number][] = VOTES.map((vote) => [vote, 0]);
 
 const STATE_KEY = "poll:state";
 
@@ -17,7 +16,9 @@ export async function reset() {
   const entries = VOTES.map((vote) => [vote, "0"]);
   await redis.del(STATE_KEY);
   await redis.hset(STATE_KEY, Object.fromEntries(entries));
-  const state = Object.fromEntries(entries.map(([k, v]) => [k, Number(v)])) as State;
+  const state = Object.fromEntries(
+    entries.map(([k, v]) => [k, Number(v)])
+  ) as State;
   broadcast("poll", "update_results", state);
 }
 export type ResetAction = typeof reset;
