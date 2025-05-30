@@ -18,5 +18,5 @@ export default defineConfig({
       },
     }),
   ],
-  resolve: { alias: { "~/": "/src/" }, external: ["ssestream"] },
+  resolve: { alias: { "~/": "/src/" } },
 });

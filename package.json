@@ -12,10 +12,7 @@
     "format": "prettier --write ."
   },
   "dependencies": {
-    "@lazarv/react-server": "0.0.0-experimental-2dab5bb-20250522-222c3bcf",
-    "better-sse": "^0.15.1",
-    "cbor2": "^2.0.1",
-    "ssestream": "^1.1.0"
+    "@lazarv/react-server": "0.0.0-experimental-2dab5bb-20250522-222c3bcf"
   },
   "devDependencies": {
     "@babel/eslint-parser": "^7.27.1",
