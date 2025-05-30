@@ -12,7 +12,8 @@
     "format": "prettier --write ."
   },
   "dependencies": {
-    "@lazarv/react-server": "0.0.0-experimental-2dab5bb-20250522-222c3bcf"
+    "@lazarv/react-server": "0.0.0-experimental-2dab5bb-20250522-222c3bcf",
+    "ioredis": "^5.6.1"
   },
   "devDependencies": {
     "@babel/eslint-parser": "^7.27.1",

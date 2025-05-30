@@ -11,11 +11,24 @@ export default async function GetEvents({ request }: { request: Request }) {
 
   const stream = new ReadableStream({
     start(controller) {
-      subscribe(channelId, clientId, controller);
+      // Subscribe with cleanup
+      subscribe(channelId, clientId, controller, request.signal);
+
+      // Extra safety: timeout or heartbeat
+      const ping = setInterval(() => {
+        try {
+          controller.enqueue(new TextEncoder().encode(": ping\n\n"));
+        } catch {
+          unsubscribe(channelId, clientId);
+          controller.close();
+          clearInterval(ping);
+        }
+      }, 15000); // send comment every 15s
 
       request.signal.addEventListener("abort", () => {
         unsubscribe(channelId, clientId);
         controller.close();
+        clearInterval(ping);
       });
     },
   });

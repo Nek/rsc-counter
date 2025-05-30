@@ -3,6 +3,7 @@ import { getState } from "~/lib/state";
 import { vote } from "~/lib/state";
 import { reset } from "~/lib/state";
 
-export default function Index() {
-  return <VoteWidget initialState={getState()} vote={vote} reset={reset} />;
+export default async function Index() {
+  const state = await getState();
+  return <VoteWidget initialState={state} vote={vote} reset={reset} />;
 }
